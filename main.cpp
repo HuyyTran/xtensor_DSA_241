@@ -45,7 +45,6 @@ void test_xarray_basic()
   // cout<<"a1 = "<<a1<<endl;
   // cout<<"a2 = "<<a2<<endl;
   // cout<<"a3 = "<<a3<<endl;
-  // end-------------Initialization----------------------------
   // end-------------Initialization--------------------------------
   // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
   // auto size = a.size();     // size = 6
@@ -119,13 +118,13 @@ void test_xarray_basic()
   // end-------------RESIZE--------------------------------
 
   // begin-------------Element Access--------------------------------
-  // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
-  // double d0 = a(0, 2);   // d0 is 3.
-  // double d1 = a(1);      // d1 is a(0, 2)
-  // double d2 = a[{0, 2}]; // d2 is a(0, 2)
-  // cout<<"d0 = "<<d0<<endl;
-  // cout<<"d1 = "<<d1<<endl;
-  // cout<<"d2 = "<<d2<<endl;
+  xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
+  double d0 = a(0, 2);  
+  double d1 = a(1);      
+  double d2 = a[3]; 
+  cout<<"d0 = "<<d0<<endl; // d0 = 3
+  cout<<"d1 = "<<d1<<endl; // d1 = 2
+  cout<<"d2 = "<<d2<<endl; // d2 = 4
   // end-------------Element Access--------------------------------
 
   // start-------------Data buffer--------------------------------
@@ -191,6 +190,25 @@ void test_xarray_views()
     // xt::random::shuffle(a, engine);
     // std::cout << "Shuffled array:\n" << a << std::endl;
     // end-------------xt::random::shuffle--------------------------------
+    // start-------------flexible Sliced views--------------------------------
+    // Create a 2D array
+    xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
+    std::cout << "Original array before modification:\n" << a << std::endl;
+    // Create a view for the first row
+    auto first_row = xt::view(a, 0, xt::all());
+
+    // Access elements of the view
+    std::cout << "First element of the view: " << first_row(0) << std::endl;  // Output: 1
+
+    // Modify an element through the view
+    first_row(1) = 10.0;
+    
+    // View after modification
+    std::cout << "Modified view: " << first_row << std::endl;  // Output: {1., 10., 3.}
+
+    // Original array is also modified
+    std::cout << "Original array after modification:\n" << a << std::endl;
+    // end-------------flexible Sliced views--------------------------------
   cout << "---------------END run test_xarray_views-------------" << endl;
 }
 
