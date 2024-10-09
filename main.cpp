@@ -31,9 +31,22 @@ void test_svector()
   cout << "---------------END run test_svector-------------" << endl;
 }
 
-void test_xarray()
+void test_xarray_basic()
 {
   cout << "---------------BEGIN run test_xarray-------------" << endl;
+  // begin-------------Initialization--------------------------------
+  // xt::xarray<double>::shape_type shape = {2, 3};
+  // xt::xarray<double> a0(shape);
+  // xt::xarray<double> a1(shape, 2.5);
+  // xt::xarray<double> a2 = {{1., 2., 3.}, {4., 5., 6.}};
+  // auto a3 = xt::xarray<double>::from_shape(shape);
+  // cout<<"shape = "<<xt::adapt(shape)<<endl;
+  // cout<<"a0 = "<<a0<<endl;
+  // cout<<"a1 = "<<a1<<endl;
+  // cout<<"a2 = "<<a2<<endl;
+  // cout<<"a3 = "<<a3<<endl;
+  // end-------------Initialization----------------------------
+  // end-------------Initialization--------------------------------
   // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
   // auto size = a.size();     // size = 6
   // auto dim = a.dimension(); // dim = 2
@@ -50,7 +63,7 @@ void test_xarray()
   // xt::xtensor<double, 2> b = {{1., 2.}, {3., 4.}};
   // std::cout << b << std::endl;
 
-  // Shape - dimensions - size
+  // begin-------------Shape - dimensions - size--------------------------------
   // xt::xtensor<double, 3> b = {{{11., 22., 33., 5}, {33., 44., 55., 5}, {33., 44., 55., 5}},
   //                             {{131., 22., 33., 5}, {5, 343., 44., 55.}, {32., 14., 65., 2}}};
   // auto size = b.size();     // size = 24
@@ -66,38 +79,75 @@ void test_xarray()
   // cout << "sh0 = " << sh0 << endl;
   // cout << "sh1 = " << sh1 << endl;
   // cout << "sh2 = " << sh2 << endl;
-  
-  xt::xarray<double> a0 = {1., 2., 3., 4., 5., 6.};
-  cout<<"current: "<<endl;
-  cout<<a0<<endl;
-  cout<<"shape = "<<xt::adapt(a0.shape())<<endl;
-  cout<<"dimention= "<<a0.dimension()<<endl;
-  cout<<endl;
+  // end-------------Shape - dimensions - size--------------------------------
 
-  a0.reshape({3,2});
-  cout<<"after 1st reshape: "<<endl;
-  cout<<a0<<endl;
-  cout<<"shape = "<<xt::adapt(a0.shape())<<endl;
-  cout<<"dimention= "<<a0.dimension()<<endl;
-  cout << a0 << std::endl;
-  cout<<endl;
+  // begin-------------RESHAPE--------------------------------
+  //   xt::xarray<double> a0 = {1., 2., 3., 4., 5., 6.};
+  //   cout<<"current: "<<endl;
+  //   cout<<a0<<endl;
+  //   cout<<"shape = "<<xt::adapt(a0.shape())<<endl; //shape = {6}
+  //   cout<<"dimention= "<<a0.dimension()<<endl; //dimention= 2
+  //   cout<<endl;
 
-  a0.reshape({2,3});
-  cout<<"after 2nd reshape: "<<endl;
-  cout<<a0<<endl;
-  cout<<"shape = "<<xt::adapt(a0.shape())<<endl;
-  cout<<"dimention= "<<a0.dimension()<<endl;
-  cout << a0 << std::endl;
-  // outputs {{1., 2., 3.}, {4., 5., 6. }}
+  //   a0.reshape({3,2});
+  //   cout<<"after 1st reshape: "<<endl;
+  //   cout<<a0<<endl;
+  // //  {{ 1.,  2.},
+  // //  { 3.,  4.},
+  // //  { 5.,  6.}}
+  //   cout<<"shape = "<<xt::adapt(a0.shape())<<endl; //shape = {3, 2}
+  //   cout<<"dimention= "<<a0.dimension()<<endl; //dimention= 2
+  //   cout<<endl;
+
+  //   a0.reshape({2,3});
+  //   cout<<"after 2nd reshape: "<<endl;
+  //   cout<<a0<<endl;
+  // //  {{ 1.,  2.,  3.},
+  // //  { 4.,  5.,  6.}}
+  //   cout<<"shape = "<<xt::adapt(a0.shape())<<endl;//shape = {2, 3}
+  //   cout<<"dimention= "<<a0.dimension()<<endl; //dimention= 2
+  //   // outputs {{1., 2., 3.}, {4., 5., 6. }}
+  // end-------------RESHAPE--------------------------------
 
   // xt::xtensor_fixed<double, xt::xshape<2, 2>> c = {{1.1, 2.2}, {3.3, 4.4}};
   // std::cout << c << std::endl;
+
+  // begin-------------RESIZE--------------------------------
+  // xt::xarray<double> a0 = {1., 2., 3, 4., 3, 2};
+  // a0.resize({2, 3});
+  // cout<<a0<<endl;
+  // end-------------RESIZE--------------------------------
+
+  // begin-------------Element Access--------------------------------
+  // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
+  // double d0 = a(0, 2);   // d0 is 3.
+  // double d1 = a(1);      // d1 is a(0, 2)
+  // double d2 = a[{0, 2}]; // d2 is a(0, 2)
+  // cout<<"d0 = "<<d0<<endl;
+  // cout<<"d1 = "<<d1<<endl;
+  // cout<<"d2 = "<<d2<<endl;
+  // end-------------Element Access--------------------------------
+
+  // start-------------Data buffer--------------------------------
+  // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
+  // a.data()[3] = 8.;
+  // std::cout << a << std::endl;
+  // Outputs {{1., 2., 3.}, {8., 5., 6.}}
+
+  // end-------------Data buffer--------------------------------
   cout << "---------------END run test_xarray-------------" << endl;
 }
+
+void test_xarray_views(){
+
+}
+
+
 int main(int argc, char *argv[])
 {
   // test_default();
   // test_svector();
-  test_xarray();
+  test_xarray_basic();
+  // test_xarray_views();
   return 0;
 }
