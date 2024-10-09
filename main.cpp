@@ -2,6 +2,7 @@
 
 //!  build g++ -fsanitize=address -o main -Iinclude -std=c++17 main.cpp
 //! run : ./main
+//! combo compile + run: ./run.sh && ./main
 int main(int argc, char* argv[]) {
   xt::xarray<double> a = {{1., 2.}, {3., 4.}};
   std::cout << a << std::endl;
