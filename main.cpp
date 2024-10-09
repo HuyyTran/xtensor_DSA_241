@@ -33,7 +33,7 @@ void test_svector()
 
 void test_xarray_basic()
 {
-  cout << "---------------BEGIN run test_xarray-------------" << endl;
+  cout << "---------------BEGIN run test_xarray_basic-------------" << endl;
   // begin-------------Initialization--------------------------------
   // xt::xarray<double>::shape_type shape = {2, 3};
   // xt::xarray<double> a0(shape);
@@ -135,19 +135,70 @@ void test_xarray_basic()
   // Outputs {{1., 2., 3.}, {8., 5., 6.}}
 
   // end-------------Data buffer--------------------------------
-  cout << "---------------END run test_xarray-------------" << endl;
+  cout << "---------------END run test_xarray_basic-------------" << endl;
 }
 
-void test_xarray_views(){
+void test_xarray_views()
+{
+  cout << "---------------BEGIN run test_xarray_views-------------" << endl;
+  // begin-------------Sliced views--------------------------------
+  // std::vector<size_t> shape = {3, 2, 4};
+  // xt::xarray<int> a(shape);
 
+  // // View with same number of dimensions
+  // auto v1 = xt::view(a, xt::range(1, 3), xt::all(), xt::range(1, 3));
+  // cout<<"v1 = "<<v1<<endl;
+  // // => v1.shape() = { 2, 2, 2 }
+  // // => v1(0, 0, 0) = a(1, 0, 1)
+  // // => v1(1, 1, 1) = a(2, 1, 2)
+
+  // // View reducing the number of dimensions
+  // auto v2 = xt::view(a, 1, xt::all(), xt::range(0, 4, 2));
+  // cout<<"v2 = "<<v2<<endl;
+  // // => v2.shape() = { 2, 2 }
+  // // => v2(0, 0) = a(1, 0, 0)
+  // // => v2(1, 1) = a(1, 1, 2)
+
+  // // View increasing the number of dimensions
+  // auto v3 = xt::view(a, xt::all(), xt::all(), xt::newaxis(), xt::all());
+  // cout<<"v3 = "<<v3<<endl;
+  // // => v3.shape() = { 3, 2, 1, 4 }
+  // // => v3(0, 0, 0, 0) = a(0, 0, 0)
+
+  // // View with non contiguous slices
+  // auto v4 = xt::view(a, xt::drop(0), xt::all(), xt::keep(0, 3));
+  // cout<<"v4 = "<<v4<<endl;
+  // // => v4.shape() = { 2, 2, 2 }
+  // // => v4(0, 0, 0) = a(1, 0, 0)
+  // // => v4(1, 1, 1) = a(2, 1, 3)
+
+  // // View built with negative index
+  // auto v5 = xt::view(a, -2, xt::all(), xt::range(0, 4, 2));
+  // cout<<"v5 = "<<v5<<endl;
+  // // => v5 == v2
+  // end-------------Sliced views--------------------------------
+
+  // start-------------xt::random::shuffle--------------------------------
+  // Initialize a 2D xarray
+    // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}};
+    // std::cout << "Original array:\n" << a << std::endl;
+
+    // // Create a random number engine
+    // std::random_device rd;
+    // std::mt19937 engine(rd());
+
+    // // Shuffle the array along the first axis
+    // xt::random::shuffle(a, engine);
+    // std::cout << "Shuffled array:\n" << a << std::endl;
+    // end-------------xt::random::shuffle--------------------------------
+  cout << "---------------END run test_xarray_views-------------" << endl;
 }
-
 
 int main(int argc, char *argv[])
 {
   // test_default();
   // test_svector();
-  test_xarray_basic();
-  // test_xarray_views();
+  // test_xarray_basic();
+  test_xarray_views();
   return 0;
 }
