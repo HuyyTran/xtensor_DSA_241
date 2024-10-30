@@ -1,10 +1,126 @@
 #include "main.hpp"
+#include <iostream>
+#include <string>
+
 
 //!  build g++ -fsanitize=address -o main -Iinclude -std=c++17 main.cpp
 //! run : ./main
 //! combo compile + run: ./run.sh && ./main
 //! I've custom code runner on Mac, so that combo compile + run just need to press: Ctrl+Option+K
 
+// Function declarations
+void test_default();
+void test_svector();
+void test_xarray_basic();
+void test_xarray_views();
+void test_shuffle();
+void test_operators(const std::string& op);
+void test_mathematical_function();
+
+void print_available_tests()
+{
+  std::cout << "Available tests:" << std::endl;
+  std::cout << "  ./main test_default" << std::endl;
+  std::cout << "  ./main test_svector" << std::endl;
+  std::cout << "  ./main test_xarray_basic" << std::endl;
+  std::cout << "  ./main test_xarray_views" << std::endl;
+  std::cout << "  ./main test_shuffle" << std::endl;
+  std::cout << "  ./main test_operators <operator>" << std::endl;
+  std::cout << "  ./main test_mathematical_functions" << std::endl;
+}
+
+int main(int argc, char *argv[])
+{
+  if (argc < 2)
+  {
+    std::cerr << "Usage: " << argv[0] << " <test_name>" << std::endl;
+    print_available_tests();
+    return 1;
+  }
+
+  std::string test_name = argv[1];
+
+  if (test_name == "test_default")
+  {
+    test_default();
+  }
+  else if (test_name == "test_svector")
+  {
+    test_svector();
+  }
+  else if (test_name == "test_xarray_basic")
+  {
+    test_xarray_basic();
+  }
+  else if (test_name == "test_xarray_views")
+  {
+    test_xarray_views();
+  }
+  else if (test_name == "test_shuffle")
+  {
+    test_shuffle();
+  }
+else if (test_name == "test_operators")
+  {
+    if (argc < 3)
+    {
+      std::cerr << "Usage: " << argv[0] << " test_operators <operator>" << std::endl;
+      return 1;
+    }
+    std::string op = argv[2];
+    test_operators(op);
+  }
+  else
+  {
+    std::cerr << "Unknown test name: " << test_name << std::endl;
+    print_available_tests();
+    return 1;
+  }
+
+  return 0;
+}
+
+void test_mathematical_function(){}
+void test_operators(const std::string& op)
+{
+ std::cout << "---------------BEGIN run test_operators-------------" << std::endl;
+  xt::xarray<double> a = {{1., 2.}, {3., 4.}};
+  std::cout << "Array a:\n" << a << std::endl;
+
+  xt::xarray<double> b = {{2., 3.}, {1., 0.}};
+  std::cout << "Array b:\n" << b << std::endl;
+
+  xt::xarray<double> res;
+
+  if (op == "+")
+  {
+    res = a + b;
+  }
+  else if (op == "-")
+  {
+    res = a - b;
+  }
+  else if (op == "*")
+  {
+    res = a * b;
+  }
+  else if (op == "/")
+  {
+    res = a / b;
+  }
+  else if (op == "r")
+  {
+    res = a>b;
+  }
+  else
+  {
+    std::cerr << "Unknown operator: " << op << std::endl;
+    return;
+  }
+
+  std::cout << "Result of a " << op << " b:\n" << res << std::endl;
+  std::cout << "---------------END run test_operators-------------" << std::endl;
+}
 void test_default()
 {
   cout << "---------------BEGIN run test_default-------------" << endl;
@@ -239,17 +355,3 @@ void test_shuffle()
   cout << "---------------END run test_shuffle-------------" << endl;
 }
 
-int main(int argc, char *argv[])
-{
-  // test_default();
-  // test_svector();
-  // test_xarray_basic();
-  // test_xarray_views();
-  // test_shuffle();
-  int nsamples = 3;
-  xt::xarray<double> X = xt::random::randn<double>({nsamples, 10});
-  xt::xarray<double> T = xt::random::randn<double>({nsamples, 5});
-  cout<<"X = "<<X<<endl;
-  cout<<"T = "<<T<<endl;
-  return 0;
-}
