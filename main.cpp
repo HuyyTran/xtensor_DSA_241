@@ -119,12 +119,12 @@ void test_xarray_basic()
 
   // begin-------------Element Access--------------------------------
   xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
-  double d0 = a(0, 2);  
-  double d1 = a(1);      
-  double d2 = a[3]; 
-  cout<<"d0 = "<<d0<<endl; // d0 = 3
-  cout<<"d1 = "<<d1<<endl; // d1 = 2
-  cout<<"d2 = "<<d2<<endl; // d2 = 4
+  double d0 = a(0, 2);
+  double d1 = a(1);
+  double d2 = a[3];
+  cout << "d0 = " << d0 << endl; // d0 = 3
+  cout << "d1 = " << d1 << endl; // d1 = 2
+  cout << "d2 = " << d2 << endl; // d2 = 4
   // end-------------Element Access--------------------------------
 
   // start-------------Data buffer--------------------------------
@@ -179,37 +179,64 @@ void test_xarray_views()
 
   // start-------------xt::random::shuffle--------------------------------
   // Initialize a 2D xarray
-    // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}};
-    // std::cout << "Original array:\n" << a << std::endl;
+  // xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}};
+  // std::cout << "Original array:\n" << a << std::endl;
 
-    // // Create a random number engine
-    // std::random_device rd;
-    // std::mt19937 engine(rd());
+  // // Create a random number engine
+  // std::random_device rd;
+  // std::mt19937 engine(rd());
 
-    // // Shuffle the array along the first axis
-    // xt::random::shuffle(a, engine);
-    // std::cout << "Shuffled array:\n" << a << std::endl;
-    // end-------------xt::random::shuffle--------------------------------
-    // start-------------flexible Sliced views--------------------------------
-    // Create a 2D array
-    xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
-    std::cout << "Original array before modification:\n" << a << std::endl;
-    // Create a view for the first row
-    auto first_row = xt::view(a, 0, xt::all());
+  // // Shuffle the array along the first axis
+  // xt::random::shuffle(a, engine);
+  // std::cout << "Shuffled array:\n" << a << std::endl;
+  // end-------------xt::random::shuffle--------------------------------
+  // start-------------flexible Sliced views--------------------------------
+  // Create a 2D array
+  xt::xarray<double> a = {{1., 2., 3.}, {4., 5., 6.}};
+  std::cout << "Original array before modification:\n"
+            << a << std::endl;
+  // Create a view for the first row
+  auto first_row = xt::view(a, 0, xt::all());
 
-    // Access elements of the view
-    std::cout << "First element of the view: " << first_row(0) << std::endl;  // Output: 1
+  // Access elements of the view
+  std::cout << "First element of the view: " << first_row(0) << std::endl; // Output: 1
 
-    // Modify an element through the view
-    first_row(1) = 10.0;
-    
-    // View after modification
-    std::cout << "Modified view: " << first_row << std::endl;  // Output: {1., 10., 3.}
+  // Modify an element through the view
+  first_row(1) = 10.0;
 
-    // Original array is also modified
-    std::cout << "Original array after modification:\n" << a << std::endl;
-    // end-------------flexible Sliced views--------------------------------
+  // View after modification
+  std::cout << "Modified view: " << first_row << std::endl; // Output: {1., 10., 3.}
+
+  // Original array is also modified
+  std::cout << "Original array after modification:\n"
+            << a << std::endl;
+  // end-------------flexible Sliced views--------------------------------
   cout << "---------------END run test_xarray_views-------------" << endl;
+}
+
+void test_shuffle()
+{
+  cout << "---------------BEGIN run test_shuffle-------------" << endl;
+  // Define a 2D xarray
+  xt::xarray<int> arr = {{1, 2, 3},
+                         {4, 5, 6},
+                         {7, 8, 9}};
+  xt::xarray<int> arr_index;
+  arr_index = xt::arange<int>(8);
+
+  std::cout << "Original array:\n"
+            << arr_index << "\n";
+
+  // Create a random engine
+  xt::random::default_engine_type engine(0);
+
+  // Shuffle the array along the first axis (rows)
+  xt::random::shuffle(arr_index, engine);
+
+  std::cout << "Shuffled array:\n"
+            << arr_index << "\n";
+
+  cout << "---------------END run test_shuffle-------------" << endl;
 }
 
 int main(int argc, char *argv[])
@@ -217,6 +244,12 @@ int main(int argc, char *argv[])
   // test_default();
   // test_svector();
   // test_xarray_basic();
-  test_xarray_views();
+  // test_xarray_views();
+  // test_shuffle();
+  int nsamples = 3;
+  xt::xarray<double> X = xt::random::randn<double>({nsamples, 10});
+  xt::xarray<double> T = xt::random::randn<double>({nsamples, 5});
+  cout<<"X = "<<X<<endl;
+  cout<<"T = "<<T<<endl;
   return 0;
 }
