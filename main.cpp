@@ -1,7 +1,7 @@
 #include "main.hpp"
 #include <iostream>
 #include <string>
-
+using namespace std;
 
 //!  build g++ -fsanitize=address -o main -Iinclude -std=c++17 main.cpp
 //! run : ./main
@@ -14,7 +14,7 @@ void test_svector();
 void test_xarray_basic();
 void test_xarray_views();
 void test_shuffle();
-void test_operators(const std::string& op);
+void test_operators(const std::string &op);
 void test_mathematical_function();
 
 void print_available_tests()
@@ -26,7 +26,7 @@ void print_available_tests()
   std::cout << "  ./main test_xarray_views" << std::endl;
   std::cout << "  ./main test_shuffle" << std::endl;
   std::cout << "  ./main test_operators <operator>" << std::endl;
-  std::cout << "  ./main test_mathematical_functions" << std::endl;
+  std::cout << "  ./main test_mathematical_function" << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
   {
     test_shuffle();
   }
-else if (test_name == "test_operators")
+  else if (test_name == "test_operators")
   {
     if (argc < 3)
     {
@@ -69,6 +69,10 @@ else if (test_name == "test_operators")
     }
     std::string op = argv[2];
     test_operators(op);
+  }
+  else if (test_name == "test_mathematical_function")
+  {
+    test_mathematical_function();
   }
   else
   {
@@ -80,15 +84,87 @@ else if (test_name == "test_operators")
   return 0;
 }
 
-void test_mathematical_function(){}
-void test_operators(const std::string& op)
+void test_mathematical_function()
 {
- std::cout << "---------------BEGIN run test_operators-------------" << std::endl;
+  cout << "---------------BEGIN run test_mathematical_function-------------" << endl;
+  xt::xarray<double> x = {1, 5, 7};
+  xt::xarray<double> y = {0.09, 0.2447, 0.6652};
+  xt::xarray<double> X = {{1.0, 2.0},
+                          {3.0, 4.0}};
+  xt::xarray<double> DY = {{0.1, 0.2},
+                           {0.0, 1.1}};
+  xt::xarray<bool> m_aMask = {{true, false},
+                              {true, true}};
+  // Result of xt::where
+  auto result = xt::where(m_aMask, X, 0.0);
+  // result would be: {{1.0, 0.0},
+  //                   {3.0, 4.0}}
+  // cout<<result<<endl;
+  xt::xarray<double> Y = {{-1.0, 0.0},
+                          {0.0, 1.0}};
+  auto res = Y >= 0;
+  cout << "res = " << res << endl;
+  auto res2 = res * X;
+  cout << "res2 = " << res2 << endl;
+  auto res3 = 1 / (X + 3);
+  cout << "res3 = " << res3 << endl;
+
+  auto exp = xt::exp(X); // Computes e^1, e^2, e^3, e^4 element-wise
+  cout << "exp = " << exp << endl;
+  auto exp2 = xt::exp2(X); // Computes 2^1, 2^2, 2^3, 2^4 element-wise
+  cout << "exp2 = " << exp2 << endl;
+  auto expm1 = xt::expm1(X); // Computes e^1-1, e^2-1, e^3-1, e^4-1 element-wise
+  cout << "expm1 = " << expm1 << endl;
+
+  auto tanh = xt::tanh(X); // Computes tanh(1), tanh(2), tanh(3), tanh(4) element-wise
+  cout << "tanh = " << tanh << endl;
+
+  auto DX = DY * (1 - tanh * tanh);
+  cout << "DX = " << DX << endl;
+
+  auto sum = xt::sum(X);
+  cout << "sum = " << sum + 1 << endl;
+
+  auto diag = xt::diag(x);
+  cout << "diag = " << diag << endl;
+
+  auto outer = xt::linalg::outer(y, y);
+  cout << "outer = " << outer << endl;
+
+  // Define the matrix Delta_z
+  xt::xarray<double> Delta_z = {
+      {0.0819, -0.0220, -0.0599},
+      {-0.0220, 0.1848, -0.1635},
+      {-0.0599, -0.1635, 0.2229}
+  };
+
+  // Define the vector
+  xt::xarray<double> vec = {0.1, 0.2, 0.3};
+
+  // Compute the dot product
+  auto resz = xt::linalg::dot(Delta_z, vec);
+
+  // Print the result
+  std::cout << "Result of Delta_z dot vec: " << resz << std::endl;
+
+  double N_norm = X.shape()[0];
+  cout<< "N_norm(X) = "<<N_norm<<endl;
+
+  double sum_log = xt::sum(x * xt::log(x))();
+  cout<< "sum_log = "<<sum_log<<endl;
+
+  cout << "---------------END run test_mathematical_function-------------" << endl;
+}
+void test_operators(const std::string &op)
+{
+  std::cout << "---------------BEGIN run test_operators-------------" << std::endl;
   xt::xarray<double> a = {{1., 2.}, {3., 4.}};
-  std::cout << "Array a:\n" << a << std::endl;
+  std::cout << "Array a:\n"
+            << a << std::endl;
 
   xt::xarray<double> b = {{2., 3.}, {1., 0.}};
-  std::cout << "Array b:\n" << b << std::endl;
+  std::cout << "Array b:\n"
+            << b << std::endl;
 
   xt::xarray<double> res;
 
@@ -110,7 +186,7 @@ void test_operators(const std::string& op)
   }
   else if (op == "r")
   {
-    res = a>b;
+    res = a > b;
   }
   else
   {
@@ -118,20 +194,39 @@ void test_operators(const std::string& op)
     return;
   }
 
-  std::cout << "Result of a " << op << " b:\n" << res << std::endl;
+  std::cout << "Result of a " << op << " b:\n"
+            << res << std::endl;
   std::cout << "---------------END run test_operators-------------" << std::endl;
 }
 void test_default()
 {
   cout << "---------------BEGIN run test_default-------------" << endl;
-  xt::xarray<double> a = {{1., 2.}, {3., 4.}};
-  std::cout << a << std::endl;
+  xt::xarray<double> X = {{1.0, 2.0},
+                          {3.0, 4.0}};
 
-  xt::xtensor<double, 2> b = {{1., 2.}, {3., 4.}};
-  std::cout << b << std::endl;
+  xt::xarray<bool> m_aMask = {{true, false},
+                              {true, true}};
+  // Result of xt::where
+  auto result = xt::where(m_aMask, X, 0.0);
+  // result would be: {{1.0, 0.0},
+  //                   {3.0, 4.0}}
+  // cout<<result<<endl;
+  xt::xarray<double> Y = {{-1.0, 0.0},
+                          {0.0, 1.0}};
+  auto res = Y >= 0;
+  cout << "res = " << res << endl;
+  auto res2 = res * X;
+  cout << "res2 = " << res2 << endl;
+  auto res3 = 1 / (X + 3);
+  cout << "res3 = " << res3 << endl;
 
-  xt::xtensor_fixed<double, xt::xshape<2, 2>> c = {{1., 2.}, {3., 4.}};
-  std::cout << c << std::endl;
+  auto exp = xt::exp(X); // Computes e^1, e^2, e^3, e^4 element-wise
+  cout << "exp = " << exp << endl;
+  auto exp2 = xt::exp2(X); // Computes 2^1, 2^2, 2^3, 2^4 element-wise
+  cout << "exp2 = " << exp2 << endl;
+  auto expm1 = xt::expm1(X); // Computes e^1-1, e^2-1, e^3-1, e^4-1 element-wise
+  cout << "expm1 = " << expm1 << endl;
+
   cout << "---------------END run test_default-------------" << endl;
 }
 void test_svector()
@@ -354,4 +449,3 @@ void test_shuffle()
 
   cout << "---------------END run test_shuffle-------------" << endl;
 }
-
