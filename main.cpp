@@ -87,6 +87,7 @@ int main(int argc, char *argv[])
 void test_mathematical_function()
 {
   cout << "---------------BEGIN run test_mathematical_function-------------" << endl;
+  xt::xarray<double> Yrandom;
   xt::xarray<double> x = {1, 5, 7};
   xt::xarray<double> y = {0.09, 0.2447, 0.6652};
   xt::xarray<double> X = {{1.0, 2.0},
@@ -152,6 +153,9 @@ void test_mathematical_function()
 
   double sum_log = xt::sum(x * xt::log(x))();
   cout<< "sum_log = "<<sum_log<<endl;
+
+  auto dot = xt::linalg::dot(X, Y);
+  cout << "xt::linalg::dot(X, Y) = " << dot << endl;
 
   cout << "---------------END run test_mathematical_function-------------" << endl;
 }
@@ -226,7 +230,8 @@ void test_default()
   cout << "exp2 = " << exp2 << endl;
   auto expm1 = xt::expm1(X); // Computes e^1-1, e^2-1, e^3-1, e^4-1 element-wise
   cout << "expm1 = " << expm1 << endl;
-
+  cout << "tranpose X = " << xt::transpose(X) << endl;
+  cout << "X + Y = " << X+Y << endl;
   cout << "---------------END run test_default-------------" << endl;
 }
 void test_svector()
