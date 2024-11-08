@@ -136,8 +136,7 @@ void test_mathematical_function()
   xt::xarray<double> Delta_z = {
       {0.0819, -0.0220, -0.0599},
       {-0.0220, 0.1848, -0.1635},
-      {-0.0599, -0.1635, 0.2229}
-  };
+      {-0.0599, -0.1635, 0.2229}};
 
   // Define the vector
   xt::xarray<double> vec = {0.1, 0.2, 0.3};
@@ -149,10 +148,10 @@ void test_mathematical_function()
   std::cout << "Result of Delta_z dot vec: " << resz << std::endl;
 
   double N_norm = X.shape()[0];
-  cout<< "N_norm(X) = "<<N_norm<<endl;
+  cout << "N_norm(X) = " << N_norm << endl;
 
   double sum_log = xt::sum(x * xt::log(x))();
-  cout<< "sum_log = "<<sum_log<<endl;
+  cout << "sum_log = " << sum_log << endl;
 
   auto dot = xt::linalg::dot(X, Y);
   cout << "xt::linalg::dot(X, Y) = " << dot << endl;
@@ -202,6 +201,43 @@ void test_operators(const std::string &op)
             << res << std::endl;
   std::cout << "---------------END run test_operators-------------" << std::endl;
 }
+int positive_index(int idx, int size)
+{
+  if (idx < 0)
+    return idx = size + idx;
+  return idx;
+}
+xt::xarray<double> softmax(xt::xarray<double> X, int axis)
+{
+  xt::svector<unsigned long> shape = X.shape();
+  axis = positive_index(axis, shape.size());
+  shape[axis] = 1;
+
+  xt::xarray<double> Xmax = xt::amax(X, axis);
+  X = xt::exp(X - Xmax.reshape(shape));
+  xt::xarray<double> SX = xt::sum(X, -1);
+  SX = SX.reshape(shape);
+  X = X / SX;
+
+  return X;
+}
+xt::xarray<double> softmax_backward(xt::xarray<double> DY, xt::xarray<double> Y)
+{
+  // Todo CODE YOUR
+  xt::xarray<double> dZ_batch = xt::zeros_like(DY);
+  for (std::size_t i = 0; i < DY.shape()[0]; i++)
+  {
+    // todo
+    xt::xarray<double> diag_Y = xt::diag(xt::view(Y, i));
+    xt::xarray<double> outer_Y = xt::linalg::outer(xt::view(Y, i), xt::transpose(xt::view(Y, i)));
+    xt::xarray<double> Jacobian_Y = diag_Y - outer_Y;
+    xt::view(dZ_batch, i) = xt::linalg::dot(Jacobian_Y, xt::view(DY, i));
+  }
+  xt::xarray<double> DZ = xt::sum(dZ_batch, {0});
+  return dZ_batch;
+  // return DZ;
+  // todo
+}
 void test_default()
 {
   cout << "---------------BEGIN run test_default-------------" << endl;
@@ -231,7 +267,18 @@ void test_default()
   auto expm1 = xt::expm1(X); // Computes e^1-1, e^2-1, e^3-1, e^4-1 element-wise
   cout << "expm1 = " << expm1 << endl;
   cout << "tranpose X = " << xt::transpose(X) << endl;
-  cout << "X + Y = " << X+Y << endl;
+  cout << "X + Y = " << X + Y << endl;
+
+  X = {{1.0, 2.0, 3.0}, {1.0, -1.0, 0.0}};
+  Y = softmax(X, -1);
+  xt::xarray<double> DY = {{0.1, 0.2, -0.3}, {-0.1, 0.3, 0.0}};
+  xt::xarray<double> DX = softmax_backward(DY, Y);
+  // expect
+  xt::xarray<double> expected_DX = {{0.021754, 0.083605, -0.105359},
+                                    {-0.040237, 0.030567, 0.00967}};
+  cout << "DX :" << DX << endl;
+  cout << "approximately expected_DX: " << expected_DX << endl;
+
   cout << "---------------END run test_default-------------" << endl;
 }
 void test_svector()
